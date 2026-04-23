@@ -1,0 +1,32 @@
+# Environment
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+bin/
+lib/
+share/
+pyvenv.cfg
+*.egg-info/
+dist/
+build/
+
+# Local tool state
+.lock
+CACHEDIR.TAG
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Unrelated local project content
+pluely/
