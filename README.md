@@ -39,7 +39,7 @@ nyc-census-study/
 
 The extraction script uses the `censusdis` library to query the U.S. Census Bureau American Community Survey 5 Year Estimates and aggregates the five NYC boroughs into a city level dataset.
 
-NYC county FIPS codes used by the script:
+NYC county FIPS codes:
 
 | Borough | County | FIPS |
 | --- | --- | --- |
@@ -49,7 +49,7 @@ NYC county FIPS codes used by the script:
 | Queens | Queens County | 081 |
 | Staten Island | Richmond County | 085 |
 
-The script exports three files:
+The script exports 3 csv files:
 
 | File | Description |
 | --- | --- |
