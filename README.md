@@ -6,7 +6,7 @@ The results feed a Tableau dashboard and a small Python extraction pipeline. Thi
 
 ## Dashboard
 
-Tableau placeholder: [View on Tableau Public](INSERT_TABLEAU_LINK_HERE)
+Tableau placeholder: [View on Tableau Public](https://public.tableau.com/app/profile/rick1462/viz/NYCCensusPopulation/Dashboard1)
 
 The dashboard combines:
 
