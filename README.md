@@ -8,6 +8,8 @@ The results feed a Tableau dashboard and a small Python extraction pipeline. Thi
 
 Tableau placeholder: [View on Tableau Public](https://public.tableau.com/app/profile/rick1462/viz/NYCCensusPopulation/Dashboard1)
 
+![Dashboard Screenshot](assests/Dashboard_Screenshot.jpeg)
+
 The dashboard combines:
 
 - A population-density map of New York City.
@@ -25,6 +27,8 @@ The dashboard combines:
 ```text
 nyc-census-study/
 ├── census.py
+├── assests/
+│   └── Dashboard_Screenshot.jpeg
 ├── data/
 │   ├── nyc_additional_demographics_2022.csv
 │   ├── nyc_demographics_2018_2022.csv

@@ -17,12 +17,12 @@ DATA_DIR.mkdir(exist_ok=True)
 
 CENSUS_API_KEY = os.environ.get("CENSUS_API_KEY")
 
-# NYC geographic identifiers - let's try multiple approaches
+# NYC geographic identifiers
 NYC_STATE = "36"  # New York state FIPS
 NYC_COUNTY_CODES = ["005", "047", "061", "081", "085"]  # Bronx, Brooklyn, Manhattan, Queens, Staten Island
 
 def test_api_connection():
-    """Test API connection and find correct NYC identifiers"""
+    """Test API connection and link correct NYC identifiers"""
     print("Testing Census API connection...")
 
     if not CENSUS_API_KEY:
@@ -30,7 +30,7 @@ def test_api_connection():
         return False
     
     try:
-        # Test basic API connection with a simple query
+        # Test basic API connection with a test sample query
         test_df = ced.download(
             dataset='acs/acs5',
             vintage=2022,
@@ -45,7 +45,7 @@ def test_api_connection():
         return False
 
 def get_nyc_data_by_counties(variables, year=2022, dataset='acs/acs5'):
-    """Get NYC data by aggregating all 5 boroughs (counties)"""
+    """Getting NYC data by aggregating all 5 boroughs"""
     print(f"Fetching data for NYC boroughs (year {year})...")
     
     borough_data = []
@@ -63,7 +63,6 @@ def get_nyc_data_by_counties(variables, year=2022, dataset='acs/acs5'):
             )
             
             if not df.empty:
-                # Add borough identifier
                 df['Borough'] = borough_names[i]
                 df['County_Code'] = county_code
                 borough_data.append(df)
@@ -80,7 +79,7 @@ def get_nyc_data_by_counties(variables, year=2022, dataset='acs/acs5'):
         print(f"✓ Combined data from {len(borough_data)} boroughs")
         return combined_df
     else:
-        print("✗ No borough data successfully retrieved")
+        print("✗ Unsuccessfully fetched borough data")
         return pd.DataFrame()
 
 def aggregate_nyc_totals(borough_df, numeric_columns):
@@ -97,11 +96,11 @@ def aggregate_nyc_totals(borough_df, numeric_columns):
     
     return nyc_totals
 
-def get_population_pyramid_data(year=2022):
+def get_population_pyramid_data(year=2020):
     """Get population by age and sex for population pyramid"""
     print(f"Fetching population pyramid data for {year}...")
     
-    # Age and sex variables from ACS5
+    # Age and sex variables
     age_sex_vars = [
         'B01001_002E',  # Male total
         'B01001_003E', 'B01001_004E', 'B01001_005E', 'B01001_006E', 'B01001_007E',
@@ -123,10 +122,10 @@ def get_population_pyramid_data(year=2022):
         if borough_df.empty:
             return pd.DataFrame()
         
-        # Aggregate across boroughs
+        # Aggregate boroughs
         nyc_totals = aggregate_nyc_totals(borough_df, age_sex_vars)
         
-        # Create age groups mapping
+        # Create age groups buckets
         age_groups = [
             'Under 5', '5-9', '10-14', '15-17', '18-19', '20', '21', '22-24',
             '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59',
@@ -155,8 +154,8 @@ def get_population_pyramid_data(year=2022):
         print(f"Error fetching population pyramid data: {e}")
         return pd.DataFrame()
 
-def get_demographic_data(years=range(2018, 2023)):
-    """Get demographic data for multiple years"""
+def get_demographic_data(years=range(2015, 2020)):
+    """Getting demographic data for multiple years"""
     print("Fetching demographic data...")
     
     all_data = []
@@ -174,7 +173,7 @@ def get_demographic_data(years=range(2018, 2023)):
                 'B01002_003E',  # Median age female
             ]
             
-            # Race/ethnicity variables
+            # Race/ethnicity
             race_vars = [
                 'B02001_002E',  # White alone
                 'B02001_003E',  # Black or African American alone
@@ -186,13 +185,13 @@ def get_demographic_data(years=range(2018, 2023)):
                 'B03003_003E',  # Hispanic or Latino
             ]
             
-            # Income variables
+            # Income
             income_vars = [
                 'B19013_001E',  # Median household income
                 'B19301_001E',  # Per capita income
             ]
             
-            # Housing variables
+            # Housing
             housing_vars = [
                 'B25001_001E',  # Total housing units
                 'B25002_002E',  # Occupied housing units
@@ -207,18 +206,17 @@ def get_demographic_data(years=range(2018, 2023)):
                 print(f"  ✗ No data for year {year}")
                 continue
             
-            # For demographic data, we need to handle median values differently
-            # For medians, we'll use population-weighted averages
+            # For demographic data we need to handle median values differently
+            # For medians, we'll use population weighted averages
             
             # Sum totals across boroughs
             numeric_vars = [v for v in all_vars if v not in ['B01002_001E', 'B01002_002E', 'B01002_003E', 'B19013_001E', 'B19301_001E']]
             nyc_totals = aggregate_nyc_totals(borough_df, numeric_vars)
             
-            # Calculate population-weighted medians for age and income
+            # Calculate population weighted medians for age and income
             total_pop = nyc_totals.get('B01001_001E', 0)
             if total_pop > 0:
-                # For median age and income, we'll use a simple average of borough values
-                # (This is an approximation - true median would require individual-level data)
+                # For median age and income, we'll average the borough values (This is an approximation)
                 median_age_total = borough_df['B01002_001E'].mean() if 'B01002_001E' in borough_df.columns else 0
                 median_age_male = borough_df['B01002_002E'].mean() if 'B01002_002E' in borough_df.columns else 0
                 median_age_female = borough_df['B01002_003E'].mean() if 'B01002_003E' in borough_df.columns else 0
@@ -281,8 +279,8 @@ def get_demographic_data(years=range(2018, 2023)):
     
     return pd.DataFrame(all_data)
 
-def get_additional_demographics(year=2022):
-    """Get additional demographic details"""
+def get_additional_demographics(year=2020):
+    """Getting additional demographic details"""
     print(f"Fetching additional demographics for {year}...")
     
     try:
@@ -305,7 +303,7 @@ def get_additional_demographics(year=2022):
         
         # Poverty status
         poverty_vars = [
-            'B17001_001E',  # Total population for poverty determination
+            'B17001_001E',  # Total population for poverty status
             'B17001_002E',  # Below poverty level
         ]
         
@@ -362,9 +360,9 @@ def main():
         return
     
     # Define year parameters
-    pyramid_year = 2022
-    demographic_years = range(2018, 2023)
-    additional_year = 2022
+    pyramid_year = 2020
+    demographic_years = range(2015, 2020)
+    additional_year = 2020
     
     # Get population pyramid data (most recent year)
     pyramid_df = get_population_pyramid_data(pyramid_year)
