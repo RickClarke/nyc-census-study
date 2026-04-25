@@ -27,6 +27,3 @@ CACHEDIR.TAG
 # IDE
 .vscode/
 .idea/
-
-# Unrelated local project content
-pluely/
