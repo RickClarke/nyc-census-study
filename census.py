@@ -1,12 +1,15 @@
 """/// script
 dependencies = [
     "censusdis",
+    "numpy",
     "pandas",
 ]
 ///"""
 
 import censusdis.data as ced
 import pandas as pd
+import numpy as np
+from censusdis import states
 import os
 from pathlib import Path
 
@@ -17,12 +20,12 @@ DATA_DIR.mkdir(exist_ok=True)
 
 CENSUS_API_KEY = os.environ.get("CENSUS_API_KEY")
 
-# NYC geographic identifiers
+# NYC geographic identifiers - let's try multiple approaches
 NYC_STATE = "36"  # New York state FIPS
 NYC_COUNTY_CODES = ["005", "047", "061", "081", "085"]  # Bronx, Brooklyn, Manhattan, Queens, Staten Island
 
 def test_api_connection():
-    """Test API connection and link correct NYC identifiers"""
+    """Test API connection and find correct NYC identifiers"""
     print("Testing Census API connection...")
 
     if not CENSUS_API_KEY:
@@ -30,10 +33,10 @@ def test_api_connection():
         return False
     
     try:
-        # Test basic API connection with a test sample query
+        # Test basic API connection with a simple query
         test_df = ced.download(
             dataset='acs/acs5',
-            vintage=2022,
+            vintage=2020,
             download_variables=['B01001_001E'],  # Total population
             state="36"  # New York state
         )
@@ -44,8 +47,8 @@ def test_api_connection():
         print(f"✗ API connection failed: {e}")
         return False
 
-def get_nyc_data_by_counties(variables, year=2022, dataset='acs/acs5'):
-    """Getting NYC data by aggregating all 5 boroughs"""
+def get_nyc_data_by_counties(variables, year=2020, dataset='acs/acs5'):
+    """Get NYC data by aggregating all 5 boroughs (counties)"""
     print(f"Fetching data for NYC boroughs (year {year})...")
     
     borough_data = []
@@ -63,6 +66,7 @@ def get_nyc_data_by_counties(variables, year=2022, dataset='acs/acs5'):
             )
             
             if not df.empty:
+                # Add borough identifier
                 df['Borough'] = borough_names[i]
                 df['County_Code'] = county_code
                 borough_data.append(df)
@@ -79,7 +83,7 @@ def get_nyc_data_by_counties(variables, year=2022, dataset='acs/acs5'):
         print(f"✓ Combined data from {len(borough_data)} boroughs")
         return combined_df
     else:
-        print("✗ Unsuccessfully fetched borough data")
+        print("✗ No borough data successfully retrieved")
         return pd.DataFrame()
 
 def aggregate_nyc_totals(borough_df, numeric_columns):
@@ -96,7 +100,7 @@ def aggregate_nyc_totals(borough_df, numeric_columns):
     
     return nyc_totals
 
-def get_population_pyramid_data(year=2020):
+def get_population_pyramid_data(year):
     """Get population by age and sex for population pyramid"""
     print(f"Fetching population pyramid data for {year}...")
     
@@ -154,8 +158,8 @@ def get_population_pyramid_data(year=2020):
         print(f"Error fetching population pyramid data: {e}")
         return pd.DataFrame()
 
-def get_demographic_data(years=range(2015, 2020)):
-    """Getting demographic data for multiple years"""
+def get_demographic_data(years):
+    """Get demographic data for multiple years"""
     print("Fetching demographic data...")
     
     all_data = []
@@ -206,8 +210,7 @@ def get_demographic_data(years=range(2015, 2020)):
                 print(f"  ✗ No data for year {year}")
                 continue
             
-            # For demographic data we need to handle median values differently
-            # For medians, we'll use population weighted averages
+            # For demographic data, we'll use population weighted averages to handle median values.
             
             # Sum totals across boroughs
             numeric_vars = [v for v in all_vars if v not in ['B01002_001E', 'B01002_002E', 'B01002_003E', 'B19013_001E', 'B19301_001E']]
@@ -216,7 +219,7 @@ def get_demographic_data(years=range(2015, 2020)):
             # Calculate population weighted medians for age and income
             total_pop = nyc_totals.get('B01001_001E', 0)
             if total_pop > 0:
-                # For median age and income, we'll average the borough values (This is an approximation)
+                # For median age and income, we'll use a simple average of borough values (This is an approximation)
                 median_age_total = borough_df['B01002_001E'].mean() if 'B01002_001E' in borough_df.columns else 0
                 median_age_male = borough_df['B01002_002E'].mean() if 'B01002_002E' in borough_df.columns else 0
                 median_age_female = borough_df['B01002_003E'].mean() if 'B01002_003E' in borough_df.columns else 0
@@ -279,8 +282,8 @@ def get_demographic_data(years=range(2015, 2020)):
     
     return pd.DataFrame(all_data)
 
-def get_additional_demographics(year=2020):
-    """Getting additional demographic details"""
+def get_additional_demographics(year):
+    """Get additional demographic details"""
     print(f"Fetching additional demographics for {year}...")
     
     try:
@@ -303,7 +306,7 @@ def get_additional_demographics(year=2020):
         
         # Poverty status
         poverty_vars = [
-            'B17001_001E',  # Total population for poverty status
+            'B17001_001E',  # Total population for poverty determination
             'B17001_002E',  # Below poverty level
         ]
         
@@ -349,19 +352,15 @@ def main():
     """Main function to extract all NYC census data"""
     print("Starting NYC Census Data Extraction...")
     print("=" * 50)
-
-    if not CENSUS_API_KEY:
-        print("Please set the CENSUS_API_KEY environment variable and try again.")
-        return
     
     # Test API connection first
     if not test_api_connection():
         print("Please check your Census API key and try again.")
         return
     
-    # Define year parameters
+    # Set years parameters
     pyramid_year = 2020
-    demographic_years = range(2015, 2020)
+    demographic_years = range(2015, 2021)
     additional_year = 2020
     
     # Get population pyramid data (most recent year)
@@ -395,7 +394,7 @@ def main():
     if not additional_df.empty:
         additional_filename = DATA_DIR / f'nyc_additional_demographics_{additional_year}.csv'
         additional_df.to_csv(additional_filename, index=False)
-        print(f"✓ Additional demographics data exported to '{additional_filename}'")
+        print(f"✓ Additional demographics exported to '{additional_filename}'")
     else:
         print("✗ No additional demographics data to export")
     

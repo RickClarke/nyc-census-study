@@ -30,9 +30,9 @@ nyc-census-study/
 ├── assests/
 │   └── Dashboard_Screenshot.jpeg
 ├── data/
-│   ├── nyc_additional_demographics_2022.csv
-│   ├── nyc_demographics_2018_2022.csv
-│   └── nyc_population_pyramid_2022.csv
+│   ├── nyc_additional_demographics_2020.csv
+│   ├── nyc_demographics_2015_2020.csv
+│   └── nyc_population_pyramid_2020.csv
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -57,9 +57,9 @@ The script exports 3 csv files:
 
 | File | Description |
 | --- | --- |
-| `data/nyc_population_pyramid_2022.csv` | Population by age group and sex for the most recent year in the export |
-| `data/nyc_demographics_2018_2022.csv` | Five annual ACS exports covering population, race, income, housing, and density |
-| `data/nyc_additional_demographics_2022.csv` | Education, labor force, unemployment, and poverty indicators |
+| `data/nyc_population_pyramid_2020.csv` | Population by age group and sex for the most recent year in the export |
+| `data/nyc_demographics_2015_2020.csv` | Six annual ACS exports covering population, race, income, housing, and density |
+| `data/nyc_additional_demographics_2020.csv` | Education, labor force, unemployment, and poverty indicators |
  
 ---
 
@@ -68,7 +68,7 @@ The script exports 3 csv files:
 Install dependencies:
 
 ```bash
-pip install censusdis pandas
+pip install censusdis numpy pandas
 ```
 
 ### Get a Census API Key
@@ -94,7 +94,7 @@ The script writes CSV outputs to the local `data/` directory.
 
 - ACS 5 year estimates are rolling averages, not single year point in time snapshots.
 - Median age and income values are approximated from borough level values rather than reconstructed from microdata.
-- The current checked in exports span `2018-2022`, which is the five-year output presently included in this repository.
+- The current checked in exports span `2015-2020`, which is the output presently included in this repository.
 
 ## Sources
 
