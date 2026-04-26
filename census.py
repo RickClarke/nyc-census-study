@@ -13,32 +13,29 @@ from censusdis import states
 import os
 from pathlib import Path
 
-# Create the output directory next to this script so `uv run census.py` works
-# regardless of the caller's current working directory.
+#Create the output directory
 DATA_DIR = Path(__file__).resolve().parent / 'data'
 DATA_DIR.mkdir(exist_ok=True)
 
-CENSUS_API_KEY = os.environ.get("CENSUS_API_KEY")
+#INput your Census API key
+CENSUS_API_KEY = "My Census API Key"  #Replace with actual API key
+os.environ['CENSUS_API_KEY'] = CENSUS_API_KEY
 
-# NYC geographic identifiers - let's try multiple approaches
+#NYC geographic identifiers
 NYC_STATE = "36"  # New York state FIPS
 NYC_COUNTY_CODES = ["005", "047", "061", "081", "085"]  # Bronx, Brooklyn, Manhattan, Queens, Staten Island
 
 def test_api_connection():
     """Test API connection and find correct NYC identifiers"""
     print("Testing Census API connection...")
-
-    if not CENSUS_API_KEY:
-        print("✗ API connection failed: CENSUS_API_KEY is not set")
-        return False
     
     try:
-        # Test basic API connection with a simple query
+        #Test basic API connection
         test_df = ced.download(
             dataset='acs/acs5',
             vintage=2020,
-            download_variables=['B01001_001E'],  # Total population
-            state="36"  # New York state
+            download_variables=['B01001_001E'],  #Total population
+            state="36"  #New York state
         )
         print("✓ API connection successful")
         print(f"Found {len(test_df)} geographic areas in NY state")
