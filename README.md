@@ -94,7 +94,7 @@ The script writes CSV outputs to the local `data/` directory.
 
 - ACS 5 year estimates are rolling averages, not single year point in time snapshots.
 - Median age and income values are approximated from borough level values rather than reconstructed from microdata.
-- The current checked in exports span `2015-2020`, which is the output presently included in this repository.
+- The exports span `2015-2020`, which is the output included in this repository.
 
 ## Sources
 
