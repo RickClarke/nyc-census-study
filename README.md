@@ -41,7 +41,7 @@ nyc-census-study/
 
 ## Data Pipeline
 
-The extraction script uses the `censusdis` library to query the U.S. Census Bureau American Community Survey 5 Year Estimates and aggregates the five NYC boroughs into a city level dataset.
+The extraction script uses the [`censusdis`](https://github.com/censusdis/censusdis) library to query the U.S. Census Bureau American Community Survey 5 Year Estimates and aggregates the five NYC boroughs into a city level dataset.
 
 NYC county FIPS codes:
 
