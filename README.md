@@ -78,7 +78,7 @@ Register for a free key at [api.census.gov/data/key_signup.html](https://api.cen
 Set your Census API key:
 
 ```bash
-export CENSUS_API_KEY=your_key_here
+CENSUS_API_KEY = "My Census API Key"
 ```
 
 Then run:
