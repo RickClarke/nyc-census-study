@@ -4,6 +4,13 @@ I pulled five years of NYC demographic data from the U.S. Census Bureau and aske
 
 The results feed a Tableau dashboard and a small Python extraction pipeline. This repository contains the exported CSVs used in the study and the script that generated them.
 
+This is a simple data science project covers 3 things:
+ 
+- **Pulling data from an API** — using the `censusdis` library to request Census data for specific geographies and years.
+- **Working with Geospatial Data** — loading H3 hexagon population density tiles as a GIS dataset, clipping them to NYC's borough boundaries, and using the result as a map layer in Tableau.
+- **Building a reproducible pipeline** — writing a script that can be re-run for any year and always produces the same clean CSV outputs.
+
+
 ## Dashboard
 
 Tableau placeholder: [View on Tableau Public](https://public.tableau.com/app/profile/rick1462/viz/NYCCensusPopulation/Main)
