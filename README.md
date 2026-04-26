@@ -10,11 +10,11 @@ Tableau placeholder: [View on Tableau Public](https://public.tableau.com/app/pro
 
 ![Dashboard Screenshot](assests/Dashboard_Screenshot.jpeg)
 
-The dashboard combines:
+The dashboard contains:
 
-- A population-density map of New York City.
+- A hexagonal population density map of New York City.
 - A demographics overview covering population, age, income, race and ethnicity, housing, and labor indicators.
-- A population pyramid and supporting summary charts.
+- A population pyramid and KPI summary charts.
 
 ## Colab
 
@@ -41,7 +41,7 @@ nyc-census-study/
 
 ## Data Pipeline
 
-The extraction script uses the [`censusdis`](https://github.com/censusdis/censusdis) library to query the U.S. Census Bureau American Community Survey 5 Year Estimates and aggregates the five NYC boroughs into a city level dataset.
+The script uses the [`censusdis`](https://github.com/censusdis/censusdis) library to query the U.S. Census Bureau American Community Survey and aggregates the five NYC boroughs into a city level dataset.
 
 NYC county FIPS codes:
 
