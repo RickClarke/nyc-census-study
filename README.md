@@ -98,6 +98,6 @@ The script writes CSV outputs to the local `data/` directory.
 
 ## Sources
 
-- U.S. Census Bureau ACS 5 Year Estimates via `data.census.gov`
+- U.S. Census Bureau ACS 5 Year Estimates via [`data.census.gov`](https://dub.sh/YqtSDyp)
 - `censusdis` for Census API access
-- Kontur population density tiles for the map layer referenced in the dashboard
+- Kontur population density tiles for the map layer referenced in the dashboard via [`data.humdata.org`](https://dub.sh/QYZtt9f)
