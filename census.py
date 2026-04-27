@@ -37,11 +37,11 @@ def test_api_connection():
             download_variables=['B01001_001E'],  #Total population
             state="36"  #New York state
         )
-        print("✓ API connection successful")
+        print("API connection successful")
         print(f"Found {len(test_df)} geographic areas in NY state")
         return True
     except Exception as e:
-        print(f"✗ API connection failed: {e}")
+        print(f"API connection failed: {e}")
         return False
 
 def get_nyc_data_by_counties(variables, year=2020, dataset='acs/acs5'):
@@ -67,20 +67,20 @@ def get_nyc_data_by_counties(variables, year=2020, dataset='acs/acs5'):
                 df['Borough'] = borough_names[i]
                 df['County_Code'] = county_code
                 borough_data.append(df)
-                print(f"    ✓ Successfully fetched {len(df)} records")
+                print(f"    Successfully fetched {len(df)} records")
             else:
-                print(f"    ✗ No data returned for {borough_names[i]}")
+                print(f"    No data returned for {borough_names[i]}")
                 
         except Exception as e:
-            print(f"    ✗ Error fetching {borough_names[i]} data: {e}")
+            print(f"    Error fetching {borough_names[i]} data: {e}")
             continue
     
     if borough_data:
         combined_df = pd.concat(borough_data, ignore_index=True)
-        print(f"✓ Combined data from {len(borough_data)} boroughs")
+        print(f"Combined data from {len(borough_data)} boroughs")
         return combined_df
     else:
-        print("✗ No borough data successfully retrieved")
+        print("No borough data successfully retrieved")
         return pd.DataFrame()
 
 def aggregate_nyc_totals(borough_df, numeric_columns):
@@ -204,7 +204,7 @@ def get_demographic_data(years):
             borough_df = get_nyc_data_by_counties(all_vars, year)
             
             if borough_df.empty:
-                print(f"  ✗ No data for year {year}")
+                print(f"  No data for year {year}")
                 continue
             
             # For demographic data, we'll use population weighted averages to handle median values.
@@ -271,10 +271,10 @@ def get_demographic_data(years):
             row_data['Population_Density_Per_Km2'] = total_pop / nyc_area_km2
             
             all_data.append(row_data)
-            print(f"  ✓ Successfully processed year {year}")
+            print(f"  Successfully processed year {year}")
             
         except Exception as e:
-            print(f"  ✗ Error processing year {year}: {e}")
+            print(f"  Error processing year {year}: {e}")
             continue
     
     return pd.DataFrame(all_data)
@@ -375,25 +375,25 @@ def main():
     if not pyramid_df.empty:
         pyramid_filename = DATA_DIR / f'nyc_population_pyramid_{pyramid_year}.csv'
         pyramid_df.to_csv(pyramid_filename, index=False)
-        print(f"✓ Population pyramid data exported to '{pyramid_filename}'")
+        print(f"Population pyramid data exported to '{pyramid_filename}'")
     else:
-        print("✗ No population pyramid data to export")
+        print("No population pyramid data to export")
     
     if not demographic_df.empty:
         demo_start_year = min(demographic_years)
         demo_end_year = max(demographic_years)
         demographic_filename = DATA_DIR / f'nyc_demographics_{demo_start_year}_{demo_end_year}.csv'
         demographic_df.to_csv(demographic_filename, index=False)
-        print(f"✓ Demographics data exported to '{demographic_filename}'")
+        print(f"Demographics data exported to '{demographic_filename}'")
     else:
-        print("✗ No demographics data to export")
+        print("No demographics data to export")
     
     if not additional_df.empty:
         additional_filename = DATA_DIR / f'nyc_additional_demographics_{additional_year}.csv'
         additional_df.to_csv(additional_filename, index=False)
-        print(f"✓ Additional demographics exported to '{additional_filename}'")
+        print(f"Additional demographics exported to '{additional_filename}'")
     else:
-        print("✗ No additional demographics data to export")
+        print("No additional demographics data to export")
     
     # Create a summary report
     if not demographic_df.empty:
